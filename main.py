@@ -7,6 +7,7 @@ from library_logic import (
     search_books,
     edit_book,
     chat_with_library,
+    bulk_import,
 )
 
 
@@ -19,16 +20,23 @@ def menu():
     print("5. Edit Book Details")
     print("6. Delete Book")
     print("7. 💬 Chat with Library (Ollama)")
-    print("8. Exit")
+    print("8. 📥 Bulk Import from CSV")
+    print("9. Exit")
 
     choice = input("Select an option: ").strip()
 
     if choice == "1":
         t = input("Title: ").strip()
         a = input("Author: ").strip()
-        g = input("Genre (or leave blank): ").strip() or "n/a"
-        tags = input("Tags (comma-separated, or leave blank): ").strip() or "n/a"
-        add_book_with_author(t, a, event="manual", genre=g, tags_string=tags)
+        if not t or not a:
+            print("❌  Title and Author are required.")
+        else:
+            g    = input("Genre        [Enter to skip]: ").strip() or "n/a"
+            tags = input("Tags         [Enter to skip]: ").strip() or "n/a"
+            s    = input("Status       [Want to Read] : ").strip() or "Want to Read"
+            r    = input("Rating 1-5   [Enter to skip]: ").strip()
+            rating = int(r) if r.isdigit() and 1 <= int(r) <= 5 else 0
+            add_book_with_author(t, a, event="manual", genre=g, tags_string=tags)
 
     elif choice == "2":
         display_library()
@@ -68,11 +76,15 @@ def menu():
         chat_with_library()
 
     elif choice == "8":
+        path = input("CSV filepath [press Enter for 'import.csv']: ").strip() or "import.csv"
+        bulk_import(path)
+
+    elif choice == "9":
         print("Goodbye! 📖")
         exit()
 
     else:
-        print("Invalid option — please choose 1-8.")
+        print("Invalid option — please choose 1-9.")
 
 
 if __name__ == "__main__":

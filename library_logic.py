@@ -1,6 +1,7 @@
 import os
 import json
 import datetime
+import csv
 from config import BOOK_FILE, DATA_FOLDER
 
 # ── Optional Ollama integration ───────────────────────────────────────────────
@@ -302,3 +303,60 @@ def edit_book(original_title):
         print("✅  Book details updated successfully.")
     else:
         print(f"❌  Could not find '{original_title}'.")
+        
+
+def bulk_import(filepath="import.csv"):
+    """Import books from a CSV file."""
+    if not os.path.exists(filepath):
+        print(f"❌  File '{filepath}' not found.")
+        print(f"    Create a CSV with columns: title, author, genre, status, tags, rating")
+        return
+
+    books = load_books()
+    added = 0
+    skipped = 0
+
+    with open(filepath, "r") as f:
+        reader = csv.DictReader(f)
+        for row in reader:
+            title  = row.get("title",  "").strip()
+            author = row.get("author", "").strip()
+
+            if not title or not author:
+                print(f"  ⚠  Skipping row — missing title or author: {row}")
+                skipped += 1
+                continue
+
+            if any(b["title"].lower() == title.lower() for b in books):
+                print(f"  ⚠  Skipping duplicate: '{title}'")
+                skipped += 1
+                continue
+
+            tags_raw = row.get("tags", "")
+            tag_list = [t.strip().lower() for t in tags_raw.split(",") if t.strip()]
+            genre    = row.get("genre",  "n/a").strip() or "n/a"
+            status   = row.get("status", "Want to Read").strip() or "Want to Read"
+
+            try:
+                rating = int(row.get("rating", 0))
+                rating = rating if 1 <= rating <= 5 else 0
+            except ValueError:
+                rating = 0
+
+            new_book = {
+                "title":     title,
+                "author":    author,
+                "genre":     genre.title(),
+                "tags":      tag_list,
+                "status":    status,
+                "rating":    rating,
+                "blurb":     "",
+                "event":     "csv_import",
+                "timestamp": datetime.datetime.now().isoformat(),
+            }
+            books.append(new_book)
+            added += 1
+            print(f"  ✅  Added: '{title}' by {author}")
+
+    save_books(books)
+    print(f"\n📚  Import complete — {added} added, {skipped} skipped.")
