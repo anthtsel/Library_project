@@ -1,0 +1,234 @@
+[
+    {
+        "title": "The Lord Of The Rings",
+        "author": "J.R.R. Tolkien",
+        "genre": "High Fantasy",
+        "status": "Want to Read",
+        "tags": [
+            "adventure/quest"
+        ],
+        "blurb": "",
+        "rating": 5,
+        "timestamp": "2026-03-21T20:57:06.554Z",
+        "event": "manual"
+    },
+    {
+        "title": "The Hobbit",
+        "author": "J.R.R. Tolkien",
+        "genre": "High Fantasy",
+        "status": "Reread",
+        "tags": [
+            "adventure"
+        ],
+        "blurb": "Bilbo Baggins\u2019s comfortable life is shattered when he\u2019s swept into an epic adventure with dwarves seeking a dragon\u2019s treasure.",
+        "rating": 5,
+        "timestamp": "2026-03-21T20:56:26.524Z",
+        "event": "manual"
+    },
+    {
+        "title": "Second Foundation",
+        "author": "Isaac Asimov",
+        "genre": "Science Fiction",
+        "status": "Reread",
+        "tags": [
+            "sci-fi"
+        ],
+        "blurb": "",
+        "rating": 5,
+        "timestamp": "2026-03-21T20:55:25.903Z",
+        "event": "manual"
+    },
+    {
+        "title": "Foundation And Empire",
+        "author": "Isaac Asimov",
+        "genre": "Science Fiction",
+        "status": "Reread",
+        "tags": [
+            "sci-fi"
+        ],
+        "blurb": "",
+        "rating": 5,
+        "timestamp": "2026-03-21T20:54:55.109Z",
+        "event": "manual"
+    },
+    {
+        "title": "Foundation",
+        "author": "Isaac Asimov",
+        "genre": "Science Fiction",
+        "status": "Reread",
+        "tags": [
+            "sci-fi",
+            "space opera"
+        ],
+        "blurb": "",
+        "rating": 5,
+        "timestamp": "2026-03-21T20:53:51.092Z",
+        "event": "manual"
+    },
+    {
+        "title": "Ender's Game",
+        "author": "Orson Scott Card",
+        "genre": "Science Fiction",
+        "status": "Reread",
+        "tags": [
+            "sci-fi"
+        ],
+        "blurb": "",
+        "rating": 5,
+        "timestamp": "2026-03-21T20:52:37.464Z",
+        "event": "edited",
+        "last_updated": "2026-03-21T20:52:43.961Z"
+    },
+    {
+        "title": "The Well Of Ascension",
+        "author": "Brandon Sanderson",
+        "genre": "Fantasy",
+        "status": "Completed",
+        "tags": [
+            "high fantasy"
+        ],
+        "blurb": "The awesome task of building a new world has been left to his young prot\u00e9g\u00e9, Vin, the former street urchin who is now the most powerful Mistborn in the land.",
+        "rating": 4,
+        "timestamp": "2026-03-21T20:46:19.245Z",
+        "event": "edited",
+        "last_updated": "2026-03-21T20:46:31.569Z"
+    },
+    {
+        "title": "Breakneck",
+        "author": "Dan Wang",
+        "genre": "Political Non-Fiction",
+        "status": "Completed",
+        "tags": [
+            "political economy",
+            "technology",
+            "and international relations"
+        ],
+        "blurb": "\u201cBreakneck\u201d plunges into China\u2019s ruthless pursuit of technological dominance, exposing a dark and exhilarating race for global supremacy.",
+        "rating": 5,
+        "timestamp": "2026-03-21T20:46:43.473Z",
+        "event": "edited",
+        "last_updated": "2026-03-21T20:46:43.473Z"
+    },
+    {
+        "title": "Atlas Of AI",
+        "author": "Kate Crawford",
+        "genre": "Tech Non-Fiction",
+        "status": "Completed",
+        "tags": [
+            "ai",
+            "technology"
+        ],
+        "blurb": "",
+        "rating": 0,
+        "timestamp": "2026-03-21T20:47:27.780Z",
+        "event": "edited",
+        "last_updated": "2026-03-21T20:47:27.780Z"
+    },
+    {
+        "title": "Mistborn",
+        "author": "Brandon Sanderson",
+        "genre": "Fantasy",
+        "status": "Completed",
+        "tags": [
+            "fantasy"
+        ],
+        "blurb": "",
+        "rating": 5,
+        "timestamp": "2026-03-21T20:48:55.577Z",
+        "event": "edited",
+        "last_updated": "2026-03-21T20:48:55.577Z"
+    },
+    {
+        "title": "The Hero Of Ages",
+        "author": "Brandon Sanderson",
+        "genre": "Fantasy",
+        "status": "Reading",
+        "tags": [
+            "fantasy"
+        ],
+        "blurb": "",
+        "rating": 3,
+        "timestamp": "2026-03-21T20:49:14.047Z",
+        "event": "edited",
+        "last_updated": "2026-03-21T20:49:14.047Z"
+    },
+    {
+        "title": "Anathem",
+        "author": "Neal Stephenson",
+        "genre": "Philosophical science fiction",
+        "status": "Want to Read",
+        "tags": [
+            "sci-fi"
+        ],
+        "blurb": "",
+        "rating": 0,
+        "timestamp": "2026-03-21T20:50:32.729Z",
+        "event": "edited",
+        "last_updated": "2026-03-21T20:50:32.729Z"
+    },
+    {
+        "title": "The Will Of The Many",
+        "author": "James Islington",
+        "genre": "Fantasy",
+        "status": "Want to Read",
+        "tags": [
+            "dystopian",
+            "epic fantasy",
+            "romanesque",
+            "dark academia"
+        ],
+        "blurb": "",
+        "rating": 0,
+        "timestamp": "2026-03-21T20:50:41.268Z",
+        "event": "edited",
+        "last_updated": "2026-03-21T20:50:41.268Z"
+    },
+    {
+        "title": "BOYD",
+        "author": "Robert Coram",
+        "genre": "N/a",
+        "status": "Completed",
+        "tags": [],
+        "blurb": "",
+        "rating": 4,
+        "timestamp": "2026-03-20T22:20:33.564911",
+        "event": "edited",
+        "last_updated": "2026-03-21T20:46:40.134Z"
+    },
+    {
+        "title": "Billy Summers",
+        "author": "Steven King",
+        "genre": "N/a",
+        "status": "Completed",
+        "tags": [],
+        "blurb": "",
+        "rating": 5,
+        "timestamp": "2026-03-20T22:35:50.869232",
+        "event": "edited",
+        "last_updated": "2026-03-21T20:46:35.132Z"
+    },
+    {
+        "title": "Neuromancer",
+        "author": "William Gibson",
+        "genre": "Cyberpunk",
+        "status": "Completed",
+        "tags": [
+            "sci-fi",
+            "neo-noir"
+        ],
+        "blurb": "",
+        "rating": 5,
+        "timestamp": "2026-03-20T22:43:15.202517",
+        "event": "edited",
+        "last_updated": "2026-03-21T20:51:36.200Z"
+    },
+    {
+        "title": "test",
+        "author": "test",
+        "status": "Completed",
+        "event": "data_entry",
+        "timestamp": "2026-03-20T22:58:34.449645",
+        "rating": 4,
+        "last_updated": "2026-03-20T23:02:53.307659"
+    }
+]
