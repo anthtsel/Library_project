@@ -155,15 +155,15 @@ def display_library():
         print("Library is empty.")
         return
 
-    # Column widths
+    # Column widths — tuned for 209-column terminal
     W_TITLE  = 28
     W_AUTHOR = 22
-    W_GENRE  = 16
+    W_GENRE  = 18
     W_STATUS = 13
     W_RATING = 5
-    W_TAGS   = 25
+    W_TAGS   = 30
     W_ADDED  = 10
-    W_BLURB  = 55
+    W_BLURB  = 60
 
     header = (
         f"{'TITLE':<{W_TITLE}} | "
@@ -173,10 +173,10 @@ def display_library():
         f"{'RATING':<{W_RATING}} | "
         f"{'TAGS':<{W_TAGS}} | "
         f"{'ADDED':<{W_ADDED}} | "
-        f"{'BLURB':<{W_BLURB}}"
+        f"BLURB"
     )
     print(f"\n{header}")
-    print("-" * len(header))
+    print("-" * 209)
 
     for b in books:
         title  = b.get("title",  "Unknown")[:W_TITLE]
@@ -185,9 +185,9 @@ def display_library():
         status = b.get("status", "Unknown")[:W_STATUS]
         blurb  = b.get("blurb",  "")[:W_BLURB]
 
-        # Rating — use plain stars to avoid emoji width issues
+        # Plain unicode stars — no emoji so padding works correctly
         rating_num = int(b.get("rating", 0))
-        rating_str = ("★" * rating_num + "☆" * (5 - rating_num)) if rating_num else "☆☆☆☆☆"
+        rating_str = "★" * rating_num + "☆" * (5 - rating_num)
 
         tags_raw = ", ".join(b.get("tags", []))[:W_TAGS]
 
@@ -202,7 +202,7 @@ def display_library():
             f"{rating_str:<{W_RATING}} | "
             f"{tags_raw:<{W_TAGS}} | "
             f"{date_only:<{W_ADDED}} | "
-            f"{blurb:<{W_BLURB}}"
+            f"{blurb}"
         )
 
 
