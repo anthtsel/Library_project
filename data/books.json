@@ -223,12 +223,115 @@
         "last_updated": "2026-03-21T20:51:36.200Z"
     },
     {
-        "title": "test",
-        "author": "test",
+        "title": "Dune",
+        "author": "Frank Herbert",
+        "genre": "Sci-Fi",
+        "tags": [
+            "space",
+            "desert",
+            "politics"
+        ],
         "status": "Completed",
-        "event": "data_entry",
-        "timestamp": "2026-03-20T22:58:34.449645",
-        "rating": 4,
-        "last_updated": "2026-03-20T23:02:53.307659"
+        "rating": 5,
+        "blurb": "",
+        "event": "csv_import",
+        "timestamp": "2026-03-21T16:49:19.742222"
+    },
+    {
+        "title": "Project Hail Mary",
+        "author": "Andy Weir",
+        "genre": "Sci-Fi",
+        "tags": [
+            "space",
+            "science"
+        ],
+        "status": "Want to Read",
+        "rating": 0,
+        "blurb": "",
+        "event": "csv_import",
+        "timestamp": "2026-03-21T16:49:19.742368"
+    },
+    {
+        "title": "Snow Crash",
+        "author": "Neal Stephenson",
+        "genre": "Sci-Fi",
+        "tags": [
+            "cyberpunk",
+            "virtual reality"
+        ],
+        "status": "Want to Read",
+        "rating": 0,
+        "blurb": "",
+        "event": "csv_import",
+        "timestamp": "2026-03-21T16:49:19.742440"
+    },
+    {
+        "title": "Carrying the Fire",
+        "author": "Michael Collins",
+        "genre": "Non-Fiction",
+        "tags": [
+            "space",
+            "spiritual"
+        ],
+        "status": "Want to Read",
+        "rating": 0,
+        "blurb": "",
+        "event": "csv_import",
+        "timestamp": "2026-03-23T19:18:28.621817"
+    },
+    {
+        "title": "The Demon-Haunted World: Science as a Candle in the Dark",
+        "author": "Carl Sagan",
+        "genre": "Non-Fiction",
+        "tags": [
+            "scientific method",
+            "science"
+        ],
+        "status": "Want to Read",
+        "rating": 0,
+        "blurb": "",
+        "event": "csv_import",
+        "timestamp": "2026-03-23T19:18:28.622116"
+    },
+    {
+        "title": "First Principles: What America\u2019s Founders Learned from the Greeks and Romans and How That Shaped Our Country",
+        "author": "Thomas E. Ricks",
+        "genre": "Snon-Fictionci-Fi",
+        "tags": [
+            "political history"
+        ],
+        "status": "Want to Read",
+        "rating": 0,
+        "blurb": "",
+        "event": "csv_import",
+        "timestamp": "2026-03-23T19:18:28.622448"
+    },
+    {
+        "title": "Think Like a Rocket Scientist: Simple Strategies You Can Use to Make Giant Leaps in Work and Life",
+        "author": "Ozan Varol",
+        "genre": "Non-Fiction",
+        "tags": [
+            "rocket science",
+            "problem-solving"
+        ],
+        "status": "Completed",
+        "rating": 3,
+        "blurb": "",
+        "event": "csv_import",
+        "timestamp": "2026-03-23T19:18:28.622588"
+    },
+    {
+        "title": "Failure Is Not an Option: Mission Control From Mercury to Apollo 13 and Beyond",
+        "author": "Gene Kranz",
+        "genre": "Non-Fiction",
+        "tags": [
+            "nasa",
+            "history"
+        ],
+        "status": "Want to Read",
+        "rating": 0,
+        "blurb": "",
+        "event": "csv_import",
+        "timestamp": "2026-03-23T19:18:28.622735"
     }
 ]

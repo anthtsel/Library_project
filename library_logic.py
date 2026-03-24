@@ -4,6 +4,46 @@ import datetime
 import csv
 from config import BOOK_FILE, DATA_FOLDER
 
+# Optional terminal color support
+try:
+    from colorama import Fore, Style, init as colorama_init
+    colorama_init(autoreset=False)
+    COLORAMA_AVAILABLE = True
+except ImportError:
+    COLORAMA_AVAILABLE = False
+    # Fallback no-op values to avoid checks everywhere
+    class Fore:
+        GREEN = ""
+        YELLOW = ""
+        CYAN = ""
+        BLUE = ""
+        RED = ""
+
+    class Style:
+        RESET_ALL = ""
+
+status_colors = {
+    "Completed":    Fore.GREEN,
+    "Reading":      Fore.YELLOW,
+    "Want to Read": Fore.CYAN,
+    "Reread":       Fore.BLUE,
+    "DNF":          Fore.RED,
+}
+
+
+def colorize_status(status):
+    if not status:
+        return ""
+
+    status_text = status.strip() if isinstance(status, str) else str(status)
+    status_key = status_text.title() if status_text.lower() != "dnf" else "DNF"
+    color = status_colors.get(status_key, "")
+
+    if COLORAMA_AVAILABLE and color:
+        return f"{color}{status_text}{Style.RESET_ALL}"
+    return status_text
+
+
 # ── Optional Ollama integration ───────────────────────────────────────────────
 try:
     import ollama
@@ -70,7 +110,7 @@ def chat_with_library():
         blurb = b.get("blurb", "")
         line = (
             f"- '{b['title']}' by {b['author']} | Genre: {b.get('genre','?')} | "
-            f"Status: {b.get('status','?')} | Rating: {b.get('rating',0)}/5 | "
+            f"Status: {colorize_status(b.get('status', '?'))} | Rating: {b.get('rating',0)}/5 | "
             f"Tags: {tags}"
         )
         if blurb:
@@ -182,7 +222,8 @@ def display_library():
         title  = b.get("title",  "Unknown")[:W_TITLE]
         author = b.get("author", "Unknown")[:W_AUTHOR]
         genre  = b.get("genre",  "N/A")[:W_GENRE]
-        status = b.get("status", "Unknown")[:W_STATUS]
+        status_plain = b.get("status", "Unknown")[:W_STATUS]
+        status = colorize_status(status_plain)
         blurb  = b.get("blurb",  "")[:W_BLURB]
 
         # Plain unicode stars — no emoji so padding works correctly
@@ -253,9 +294,10 @@ def search_books(query):
         print(f"{'TITLE':<25} | {'AUTHOR':<20} | {'GENRE':<15} | {'STATUS'}")
         print("-" * 75)
         for b in results:
+            colored_status = colorize_status(b.get('status', 'Unknown'))
             print(
                 f"{b['title']:<25} | {b['author']:<20} | "
-                f"{b.get('genre','?'):<15} | {b['status']}"
+                f"{b.get('genre','?'):<15} | {colored_status}"
             )
     else:
         print(f"\nNo books found matching '{query}'.")

@@ -6,28 +6,6 @@ A learning roadmap from easy to hard. Each upgrade teaches a concrete Python, AI
 
 ## 🟢 Easy — Core Python Practice
 
-### 1. Color in the CLI
-**What you'll learn:** Installing and using third-party libraries, terminal output formatting.
-
-Add color-coded status labels in the terminal table — green for Completed, yellow for Reading, red for DNF, etc.
-
-```bash
-pip install colorama
-```
-
-```python
-from colorama import Fore, Style
-
-status_colors = {
-    "Completed":    Fore.GREEN,
-    "Reading":      Fore.YELLOW,
-    "Want to Read": Fore.CYAN,
-    "Reread":       Fore.BLUE,
-    "DNF":          Fore.RED,
-}
-colored = status_colors.get(status, "") + status + Style.RESET_ALL
-```
-
 ---
 
 ### 2. Random book picker
