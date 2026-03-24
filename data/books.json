@@ -259,11 +259,12 @@
             "cyberpunk",
             "virtual reality"
         ],
-        "status": "Want to Read",
+        "status": "DNF",
         "rating": 0,
         "blurb": "",
         "event": "csv_import",
-        "timestamp": "2026-03-21T16:49:19.742440"
+        "timestamp": "2026-03-21T16:49:19.742440",
+        "last_updated": "2026-03-23T21:34:39.886857"
     },
     {
         "title": "Carrying the Fire",
@@ -296,13 +297,13 @@
     {
         "title": "First Principles: What America\u2019s Founders Learned from the Greeks and Romans and How That Shaped Our Country",
         "author": "Thomas E. Ricks",
-        "genre": "Snon-Fictionci-Fi",
+        "genre": "Non-Fiction",
         "tags": [
             "political history"
         ],
         "status": "Want to Read",
         "rating": 0,
-        "blurb": "",
+        "blurb": "Explore how ancient Greek and Roman wisdom fueled America\u2019s founding principles and continues to shape our nation\u2019s identity.",
         "event": "csv_import",
         "timestamp": "2026-03-23T19:18:28.622448"
     },

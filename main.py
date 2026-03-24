@@ -8,6 +8,7 @@ from library_logic import (
     edit_book,
     chat_with_library,
     bulk_import,
+    pick_random_book,
 )
 
 
@@ -18,10 +19,11 @@ def menu():
     print("3. Search Books")
     print("4. Update Status")
     print("5. Edit Book Details")
-    print("6. Delete Book")
+    print("6. Pick Random Book")
     print("7. 💬 Chat with Library (Ollama)")
     print("8. 📥 Bulk Import from CSV")
-    print("9. Exit")
+    print("9. Delete Book")
+    print("10. Exit")
 
     choice = input("Select an option: ").strip()
 
@@ -67,10 +69,13 @@ def menu():
     elif choice == "5":
         t = input("Enter the EXACT title of the book to edit: ").strip()
         edit_book(t)
-
+        
     elif choice == "6":
-        t = input("Which book title do you want to delete? ").strip()
-        delete_book(t)
+        genre_filter = input("Filter by genre? (leave blank for any): ").strip()
+        if genre_filter:
+            pick_random_book(genre=genre_filter)
+        else:
+            pick_random_book()
 
     elif choice == "7":
         chat_with_library()
@@ -78,8 +83,12 @@ def menu():
     elif choice == "8":
         path = input("CSV filepath [press Enter for 'import.csv']: ").strip() or "import.csv"
         bulk_import(path)
-
+        
     elif choice == "9":
+        t = input("Which book title do you want to delete? ").strip()
+        delete_book(t)
+
+    elif choice == "10":
         print("Goodbye! 📖")
         exit()
 

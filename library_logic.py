@@ -2,6 +2,8 @@ import os
 import json
 import datetime
 import csv
+import random
+import difflib
 from config import BOOK_FILE, DATA_FOLDER
 
 # Optional terminal color support
@@ -260,6 +262,8 @@ def delete_book(title_to_remove):
 def update_book_status(title, new_status, rating=None):
     books = load_books()
     found = False
+    
+    # Exact match first (fast path)
     for b in books:
         if b["title"].lower() == title.lower():
             b["status"] = "DNF" if new_status == "dnf" else new_status.title()
@@ -268,12 +272,52 @@ def update_book_status(title, new_status, rating=None):
             b["last_updated"] = datetime.datetime.now().isoformat()
             found = True
             break
-    if found:
-        save_books(books)
-        print(f"✅  Updated '{title}'!")
-    else:
-        print(f"❌  Could not find '{title}'")
+        
+    if not found:
+        # Fuzzy match on title or author
+        candidates = []
+        for b in books:
+            title_ratio = difflib.SequenceMatcher(None, title.lower(), b["title"].lower()).ratio()
+            author_ratio = difflib.SequenceMatcher(None, title.lower(), b["author"].lower()).ratio()
+            max_ratio = max(title_ratio, author_ratio)
+            if max_ratio > 0.6:  # Tunable cutoff (0.6 = 60% similarity)
+                candidates.append((b, max_ratio))
+    
+        if candidates:
+            candidates.sort(key=lambda x: x[1], reverse=True)  # Best match first
+            best_book, best_ratio = candidates[0]
 
+            if best_ratio > 0.8 or len(candidates) == 1:
+                # Auto-update if confident or only one match
+                b = best_book
+                b["status"] = "DNF" if new_status == "dnf" else new_status.title()
+                if rating is not None:
+                    b["rating"] = rating
+                b["last_updated"] = datetime.datetime.now().isoformat()
+                save_books(books)
+                print(f"✅  Updated '{b['title']}' (fuzzy match for '{title}')!")
+                return
+            
+            # Multiple close matches — prompt user
+            print(f"\nMultiple close matches for '{title}':")
+            for i, (b, ratio) in enumerate(candidates[:5]):  # Show top 5
+                print(f"  {i+1}. '{b['title']}' by {b['author']} (similarity: {ratio:.1f})")
+            try:
+                choice = int(input("Choose one (1-5) or 0 to cancel: ").strip())
+                if 1 <= choice <= len(candidates):
+                    b = candidates[choice-1][0]
+                    b["status"] = "DNF" if new_status == "dnf" else new_status.title()
+                    if rating is not None:
+                        b["rating"] = rating
+                    b["last_updated"] = datetime.datetime.now().isoformat()
+                    save_books(books)
+                    print(f"✅  Updated '{b['title']}'!")
+                    return
+            except ValueError:
+                pass
+            print("❌  Update cancelled.")
+        else:
+            print(f"❌  Could not find '{title}' (even with fuzzy search)")
 
 def search_books(query):
     books = load_books()
@@ -302,6 +346,20 @@ def search_books(query):
     else:
         print(f"\nNo books found matching '{query}'.")
 
+#── Pick Random Book ────────────────────────────────────────────────
+
+def pick_random_book(genre=None):
+    books = load_books()
+    pool = [b for b in books if b["status"] == "Want to Read"]
+    if genre:
+        pool = [b for b in pool if b.get("genre", "").lower() == genre.lower()]
+    if not pool:
+        print("No books found in that filter.")
+        return
+    pick = random.choice(pool)
+    print(f"\n🎲  Read next: '{pick['title']}' by {pick['author']}")
+    
+#── Edit Book Details ───────────────────────────────────────────────
 
 def edit_book(original_title):
     books = load_books()

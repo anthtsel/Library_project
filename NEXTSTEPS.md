@@ -8,28 +8,6 @@ A learning roadmap from easy to hard. Each upgrade teaches a concrete Python, AI
 
 ---
 
-### 2. Random book picker
-**What you'll learn:** List comprehensions, the `random` module, filtering data.
-
-Add a menu option that picks a random unread book — optionally filtered by genre.
-
-```python
-import random
-
-def pick_random_book(genre=None):
-    books = load_books()
-    pool = [b for b in books if b["status"] == "Want to Read"]
-    if genre:
-        pool = [b for b in pool if b.get("genre", "").lower() == genre.lower()]
-    if not pool:
-        print("No books found in that filter.")
-        return
-    pick = random.choice(pool)
-    print(f"\n🎲  Read next: '{pick['title']}' by {pick['author']}")
-```
-
----
-
 ### 3. Reading stats dashboard
 **What you'll learn:** `datetime` math, aggregation, working with real data.
 
