@@ -4,7 +4,9 @@ import datetime
 import csv
 import random
 import difflib
+from collections import Counter
 from config import BOOK_FILE, DATA_FOLDER
+import shutil
 
 # Optional terminal color support
 try:
@@ -64,9 +66,18 @@ def load_books():
     except json.JSONDecodeError:
         return []
 
-
 def save_books(book_list):
     """Save a Python list into the JSON file."""
+    os.makedirs("data/backups", exist_ok=True)
+    if os.path.exists(BOOK_FILE):
+        ts = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
+        backup_path = f"data/backups/books_{ts}.json"
+        try:
+            shutil.copy(BOOK_FILE, backup_path)
+        except Exception as e:
+            print(f"⚠️  Backup failed: {e}")
+    else:
+        print("DEBUG: No existing file to back up (first save)")
     os.makedirs(DATA_FOLDER, exist_ok=True)
     with open(BOOK_FILE, "w") as file:
         json.dump(book_list, file, indent=4)
@@ -460,3 +471,12 @@ def bulk_import(filepath="import.csv"):
 
     save_books(books)
     print(f"\n📚  Import complete — {added} added, {skipped} skipped.")
+    
+def reading_stats():
+    books = load_books()
+    completed = [b for b in books if b["status"] in ("Completed", "Reread")]
+    authors   = Counter(b["author"] for b in completed)
+    genres    = Counter(b.get("genre", "N/A") for b in completed)
+    print(f"Total read:       {len(completed)}")
+    print(f"Top author:       {authors.most_common(1)[0]}")
+    print(f"Favourite genre:  {genres.most_common(1)[0]}")

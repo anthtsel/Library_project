@@ -334,5 +334,45 @@
         "blurb": "",
         "event": "csv_import",
         "timestamp": "2026-03-23T19:18:28.622735"
+    },
+    {
+        "title": "The Maniac",
+        "author": "Benjamin Labatut",
+        "genre": "Non-Fiction",
+        "tags": [
+            "science",
+            "cerebral"
+        ],
+        "status": "Want to Read",
+        "rating": 0,
+        "blurb": "A chilling, meticulously researched account of a brilliant surgeon\u2019s descent into madness, fueled by obsession and deadly precision.",
+        "event": "manual",
+        "timestamp": "2026-03-25T21:16:37.141442"
+    },
+    {
+        "title": "Backup Test",
+        "author": "Backup Test",
+        "genre": "N/A",
+        "tags": [
+            "n/a"
+        ],
+        "status": "Want to Read",
+        "rating": 0,
+        "blurb": "A shadowy agent\u2019s last mission hinges on a deadly test of loyalty and forgotten identities.",
+        "event": "manual",
+        "timestamp": "2026-03-25T21:20:23.966713"
+    },
+    {
+        "title": "second back up test",
+        "author": "test",
+        "genre": "N/A",
+        "tags": [
+            "n/a"
+        ],
+        "status": "Want to Read",
+        "rating": 0,
+        "blurb": "Navigate a chaotic future with this thrilling, inventive novel exploring memory, identity, and the echoes of what could be.",
+        "event": "manual",
+        "timestamp": "2026-03-25T21:32:12.701742"
     }
 ]

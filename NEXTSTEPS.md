@@ -1,30 +1,9 @@
-# 🗺️ Next Steps — Upgrade Roadmap
-
-A learning roadmap from easy to hard. Each upgrade teaches a concrete Python, AI, or computer science concept that builds directly toward your larger ATLAS project goals.
-
----
-
-## 🟢 Easy — Core Python Practice
-
----
+# 🗺️ Next Steps
 
 ### 3. Reading stats dashboard
 **What you'll learn:** `datetime` math, aggregation, working with real data.
 
 Add a stats option that shows books read per month, your fastest read (if you track start/end dates), most-read author, and average rating by genre.
-
-```python
-from collections import Counter
-
-def reading_stats():
-    books = load_books()
-    completed = [b for b in books if b["status"] in ("Completed", "Reread")]
-    authors   = Counter(b["author"] for b in completed)
-    genres    = Counter(b.get("genre", "N/A") for b in completed)
-    print(f"Total read:       {len(completed)}")
-    print(f"Top author:       {authors.most_common(1)[0]}")
-    print(f"Favourite genre:  {genres.most_common(1)[0]}")
-```
 
 ---
 
