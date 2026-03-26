@@ -1,27 +1,9 @@
 # 🗺️ Next Steps
 
-### 3. Reading stats dashboard
+### 4. Reading stats dashboard
 **What you'll learn:** `datetime` math, aggregation, working with real data.
 
-Add a stats option that shows books read per month, your fastest read (if you track start/end dates), most-read author, and average rating by genre.
-
----
-
-### 4. Automatic backups
-**What you'll learn:** File system operations, `shutil`, defensive programming.
-
-Before every `save_books()` call, copy the current JSON to `data/backups/books_TIMESTAMP.json` so you always have a restore point.
-
-```python
-import shutil
-
-def save_books(book_list):
-    os.makedirs("data/backups", exist_ok=True)
-    if os.path.exists(BOOK_FILE):
-        ts = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
-        shutil.copy(BOOK_FILE, f"data/backups/books_{ts}.json")
-    # ... rest of save logic
-```
+Add a more stats option that shows books read per month, your fastest read (if you track start/end dates), most-read author, and average rating by genre.
 
 ---
 

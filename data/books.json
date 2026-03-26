@@ -374,5 +374,18 @@
         "blurb": "Navigate a chaotic future with this thrilling, inventive novel exploring memory, identity, and the echoes of what could be.",
         "event": "manual",
         "timestamp": "2026-03-25T21:32:12.701742"
+    },
+    {
+        "title": "another test",
+        "author": "test",
+        "genre": "N/A",
+        "tags": [
+            "n/a"
+        ],
+        "status": "Want to Read",
+        "rating": 0,
+        "blurb": "Navigate a treacherous, mind-bending game of deception and survival in Test\u2019s latest psychological thriller.",
+        "event": "manual",
+        "timestamp": "2026-03-25T22:11:01.916744"
     }
 ]

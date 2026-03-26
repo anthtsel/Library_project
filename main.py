@@ -1,4 +1,6 @@
 # main.py
+import argparse
+import sys
 from library_logic import (
     add_book_with_author,
     display_library,
@@ -100,7 +102,44 @@ def menu():
     else:
         print("Invalid option — please choose 1-11.")
 
+def main():
+    # python main.py add "Dune" "Frank Herbert" --genre "Sci-Fi" --tags "space,desert"
+    # python main.py search "sanderson"
+    # python main.py list
+    parser = argparse.ArgumentParser(description="📚 Library Manager")
+    subparsers = parser.add_subparsers(dest="command", help="Commands")
+
+    # Add book subcommand
+    add_parser = subparsers.add_parser("add", help="Add a new book")
+    add_parser.add_argument("title")
+    add_parser.add_argument("author")
+    add_parser.add_argument("--genre", default="n/a")
+    add_parser.add_argument("--tags", default="n/a")
+    add_parser.add_argument("--status", default="Want to Read")
+
+    # Search subcommand
+    search_parser = subparsers.add_parser("search", help="Search books")
+    search_parser.add_argument("query")
+
+    # List subcommand
+    list_parser = subparsers.add_parser("list", help="View library")
+
+    args = parser.parse_args()
+
+    if args.command == "add":
+        add_book_with_author(args.title, args.author, genre=args.genre, tags_string=args.tags, event="cli", status=args.status)
+    elif args.command == "search":
+        search_books(args.query)
+    elif args.command == "list":
+        display_library()
+    else:
+        parser.print_help()
 
 if __name__ == "__main__":
-    while True:
-        menu()
+    # If the user provided arguments (e.g., 'search'), run the CLI logic
+    if len(sys.argv) > 1:
+        main()
+    # Otherwise, enter your interactive loop
+    else:
+        while True:
+            menu()
