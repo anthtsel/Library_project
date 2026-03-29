@@ -12,6 +12,7 @@ from library_logic import (
     bulk_import,
     pick_random_book,
     reading_stats,
+    regenerate_blurb,
 )
 
 
@@ -27,7 +28,8 @@ def menu():
     print("8. 💬 Chat with Library (Ollama)")
     print("9. 📥 Bulk Import from CSV")
     print("10. Delete Book")
-    print("11. Exit")
+    print("11. 🤖 Regenerate AI Blurb")
+    print("12. Exit")
 
     choice = input("Select an option: ").strip()
 
@@ -42,7 +44,7 @@ def menu():
             s    = input("Status       [Want to Read] : ").strip() or "Want to Read"
             r    = input("Rating 1-5   [Enter to skip]: ").strip()
             rating = int(r) if r.isdigit() and 1 <= int(r) <= 5 else 0
-            add_book_with_author(t, a, event="manual", genre=g, tags_string=tags)
+            add_book_with_author(t, a, event="manual", genre=g, tags_string=tags, status=s)
 
     elif choice == "2":
         display_library()
@@ -96,11 +98,15 @@ def menu():
         delete_book(t)
 
     elif choice == "11":
+        t = input("Enter the book title to regenerate blurb for: ").strip()
+        regenerate_blurb(t)
+
+    elif choice == "12":
         print("Goodbye! 📖")
         exit()
 
     else:
-        print("Invalid option — please choose 1-11.")
+        print("Invalid option — please choose 1-12.")
 
 def main():
     # python main.py add "Dune" "Frank Herbert" --genre "Sci-Fi" --tags "space,desert"
@@ -123,6 +129,11 @@ def main():
 
     # List subcommand
     list_parser = subparsers.add_parser("list", help="View library")
+    list_parser.add_argument("--status", default=None, help="Filter by status (e.g. 'Reading')")
+
+    # Blurb subcommand
+    blurb_parser = subparsers.add_parser("blurb", help="Regenerate AI blurb for a book")
+    blurb_parser.add_argument("title", help="Exact or close title of the book")
 
     args = parser.parse_args()
 
@@ -131,7 +142,9 @@ def main():
     elif args.command == "search":
         search_books(args.query)
     elif args.command == "list":
-        display_library()
+        display_library(status_filter=args.status)
+    elif args.command == "blurb":
+        regenerate_blurb(args.title)
     else:
         parser.print_help()
 

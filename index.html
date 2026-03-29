@@ -350,7 +350,7 @@ function saveBook(){
   const genre=document.getElementById('em-genre').value.trim()||'n/a';
   const book={
     title,author,
-    genre:genre.charAt(0).toUpperCase()+genre.slice(1),
+    genre:genre.replace(/\b\w/g,c=>c.toUpperCase()),
     status:document.getElementById('em-status').value,
     tags:document.getElementById('em-tags').value.split(',').map(t=>t.trim().toLowerCase()).filter(Boolean),
     blurb:document.getElementById('em-blurb').value.trim(),

@@ -5,7 +5,7 @@ import csv
 import random
 import difflib
 from collections import Counter
-from config import BOOK_FILE, DATA_FOLDER
+from config import BOOK_FILE, DATA_FOLDER, OLLAMA_MODEL
 import shutil
 
 # Optional terminal color support
@@ -76,8 +76,6 @@ def save_books(book_list):
             shutil.copy(BOOK_FILE, backup_path)
         except Exception as e:
             print(f"⚠️  Backup failed: {e}")
-    else:
-        print("DEBUG: No existing file to back up (first save)")
     os.makedirs(DATA_FOLDER, exist_ok=True)
     with open(BOOK_FILE, "w") as file:
         json.dump(book_list, file, indent=4)
@@ -85,25 +83,47 @@ def save_books(book_list):
 
 # ── AI helpers ────────────────────────────────────────────────────────────────
 
-def generate_blurb(title, author, genre=""):
-    """Use Ollama (gemma3:4b) to generate a one-sentence blurb for a book."""
+def generate_blurb(title, author, genre="", tags=None):
+    """Use Ollama to generate a one-sentence blurb for a book."""
     if not OLLAMA_AVAILABLE:
         return ""
     genre_hint = f" in the {genre} genre" if genre and genre.lower() != "n/a" else ""
+    tags_hint  = f" Themes include: {', '.join(tags)}." if tags else ""
     prompt = (
         f"Write exactly ONE sentence (max 20 words) that serves as an enticing blurb "
-        f"for the book '{title}' by {author}{genre_hint}. "
+        f"for the book '{title}' by {author}{genre_hint}.{tags_hint} "
         f"Respond with the sentence only — no quotes, no labels, no extra text."
     )
     try:
         response = ollama.chat(
-            model="gemma3:4b",
+            model=OLLAMA_MODEL,
             messages=[{"role": "user", "content": prompt}]
         )
         return response["message"]["content"].strip()
     except Exception as e:
         print(f"  ⚠  Ollama blurb generation failed: {e}")
         return ""
+
+
+def regenerate_blurb(title):
+    """Find a book by title and regenerate its AI blurb via Ollama."""
+    if not OLLAMA_AVAILABLE:
+        print("❌  Ollama library not installed. Run: pip install ollama")
+        return
+    books = load_books()
+    for b in books:
+        if b["title"].lower() == title.lower():
+            print(f"  🤖  Generating blurb for '{b['title']}'…", end=" ", flush=True)
+            blurb = generate_blurb(b["title"], b["author"], b.get("genre", ""))
+            if blurb:
+                b["blurb"] = blurb
+                save_books(books)
+                print("done.")
+                print(f"  📝  {blurb}")
+            else:
+                print("skipped (Ollama returned empty).")
+            return
+    print(f"❌  Could not find '{title}'.")
 
 
 def chat_with_library():
@@ -117,17 +137,21 @@ def chat_with_library():
         print("Your library is empty — nothing to chat about yet!")
         return
 
+    status_order = {"Reading": 0, "Reread": 1, "Completed": 2, "Want to Read": 3, "DNF": 4}
+    books_sorted = sorted(books, key=lambda b: status_order.get(b.get("status", ""), 5))
+
     summary_lines = []
-    for b in books:
-        tags = ", ".join(b.get("tags", [])) or "none"
+    for b in books_sorted:
+        tags  = ", ".join(b.get("tags", [])) or "none"
         blurb = b.get("blurb", "")
+        rating_val = b.get("rating", 0)
+        rating_str = f"{rating_val}/5" if rating_val else "unrated"
         line = (
-            f"- '{b['title']}' by {b['author']} | Genre: {b.get('genre','?')} | "
-            f"Status: {colorize_status(b.get('status', '?'))} | Rating: {b.get('rating',0)}/5 | "
-            f"Tags: {tags}"
+            f'"{b["title"]}" by {b["author"]} ({b.get("genre", "?")}) — '
+            f'Status: {b.get("status", "?")}, Rating: {rating_str}, Tags: {tags}'
         )
         if blurb:
-            line += f" | Blurb: {blurb}"
+            line += f'. Blurb: {blurb}'
         summary_lines.append(line)
 
     library_context = "\n".join(summary_lines)
@@ -152,12 +176,18 @@ def chat_with_library():
         history.append({"role": "user", "content": user_input})
 
         try:
-            response = ollama.chat(
-                model="gemma3:4b",
-                messages=[{"role": "system", "content": system_prompt}] + history
+            stream = ollama.chat(
+                model=OLLAMA_MODEL,
+                messages=[{"role": "system", "content": system_prompt}] + history,
+                stream=True,
             )
-            reply = response["message"]["content"].strip()
-            print(f"\nLibrarian: {reply}\n")
+            print("\nLibrarian: ", end="", flush=True)
+            reply = ""
+            for chunk in stream:
+                token = chunk["message"]["content"]
+                print(token, end="", flush=True)
+                reply += token
+            print("\n")
             history.append({"role": "assistant", "content": reply})
         except Exception as e:
             print(f"❌  Ollama error: {e}")
@@ -166,10 +196,13 @@ def chat_with_library():
 
 # ── Core CRUD ─────────────────────────────────────────────────────────────────
 
-def add_book_with_author(title, author, event="manual", genre="n/a", tags_string="n/a"):
+def add_book_with_author(title, author, event="manual", genre="n/a", tags_string="n/a", status="Want to Read"):
     books = load_books()
 
     tag_list = [t.strip().lower() for t in tags_string.split(",") if t.strip()]
+
+    # Normalize status
+    status = "DNF" if status.lower() == "dnf" else status.title()
 
     # Duplicate check
     if any(b["title"].lower() == title.lower() for b in books):
@@ -180,7 +213,7 @@ def add_book_with_author(title, author, event="manual", genre="n/a", tags_string
     blurb = ""
     if OLLAMA_AVAILABLE:
         print("  🤖  Generating blurb via Ollama…", end=" ", flush=True)
-        blurb = generate_blurb(title, author, genre)
+        blurb = generate_blurb(title, author, genre, tags=tag_list)
         print("done." if blurb else "skipped.")
 
     new_book = {
@@ -188,9 +221,10 @@ def add_book_with_author(title, author, event="manual", genre="n/a", tags_string
         "author": author,
         "genre": genre.title(),
         "tags": tag_list,
-        "status": "Want to Read",
+        "status": status,
         "rating": 0,
         "blurb": blurb,
+        "notes": "",
         "event": event,
         "timestamp": datetime.datetime.now().isoformat(),
     }
@@ -202,11 +236,16 @@ def add_book_with_author(title, author, event="manual", genre="n/a", tags_string
         print(f"   📝  {blurb}")
 
 
-def display_library():
+def display_library(status_filter=None):
     books = load_books()
     if not books:
         print("Library is empty.")
         return
+    if status_filter:
+        books = [b for b in books if b.get("status", "").lower() == status_filter.lower()]
+        if not books:
+            print(f"No books with status '{status_filter}'.")
+            return
 
     # Column widths — tuned for 209-column terminal
     W_TITLE  = 28
@@ -281,9 +320,11 @@ def update_book_status(title, new_status, rating=None):
             if rating is not None:
                 b["rating"] = rating
             b["last_updated"] = datetime.datetime.now().isoformat()
+            save_books(books)
+            print(f"✅  Updated '{b['title']}'!")
             found = True
             break
-        
+
     if not found:
         # Fuzzy match on title or author
         candidates = []
@@ -354,6 +395,12 @@ def search_books(query):
                 f"{b['title']:<25} | {b['author']:<20} | "
                 f"{b.get('genre','?'):<15} | {colored_status}"
             )
+        if len(results) == 1:
+            b = results[0]
+            if b.get("blurb"):
+                print(f"\n  📝  {b['blurb']}")
+            if b.get("notes"):
+                print(f"  🗒   Notes: {b['notes']}")
     else:
         print(f"\nNo books found matching '{query}'.")
 
@@ -396,6 +443,10 @@ def edit_book(original_title):
             new_tags = input(f"New Tags [{current_tags}]: ")
             if new_tags:
                 b["tags"] = [t.strip().lower() for t in new_tags.split(",")]
+
+            new_notes = input(f"Notes [{b.get('notes', '')}]: ")
+            if new_notes:
+                b["notes"] = new_notes
 
             if OLLAMA_AVAILABLE:
                 regen = input("Regenerate AI blurb? (y/N): ").strip().lower()
@@ -462,6 +513,7 @@ def bulk_import(filepath="import.csv"):
                 "status":    status,
                 "rating":    rating,
                 "blurb":     "",
+                "notes":     "",
                 "event":     "csv_import",
                 "timestamp": datetime.datetime.now().isoformat(),
             }
@@ -471,12 +523,62 @@ def bulk_import(filepath="import.csv"):
 
     save_books(books)
     print(f"\n📚  Import complete — {added} added, {skipped} skipped.")
+
+    if OLLAMA_AVAILABLE and added > 0:
+        ans = input(f"Generate AI blurbs for {added} imported book(s)? This may take a while. (y/N): ").strip().lower()
+        if ans == "y":
+            updated = 0
+            for b in books:
+                if b.get("event") == "csv_import" and not b.get("blurb"):
+                    print(f"  🤖  '{b['title']}'…", end=" ", flush=True)
+                    blurb = generate_blurb(b["title"], b["author"], b.get("genre", ""), tags=b.get("tags"))
+                    if blurb:
+                        b["blurb"] = blurb
+                        updated += 1
+                        print("done.")
+                    else:
+                        print("skipped.")
+            if updated:
+                save_books(books)
+                print(f"✅  Generated blurbs for {updated} book(s).")
     
 def reading_stats():
     books = load_books()
-    completed = [b for b in books if b["status"] in ("Completed", "Reread")]
+    if not books:
+        print("Library is empty.")
+        return
+
+    now       = datetime.datetime.now()
+    this_month = now.strftime("%Y-%m")
+    this_year  = now.strftime("%Y")
+
+    completed = [b for b in books if b.get("status") in ("Completed", "Reread")]
     authors   = Counter(b["author"] for b in completed)
     genres    = Counter(b.get("genre", "N/A") for b in completed)
-    print(f"Total read:       {len(completed)}")
-    print(f"Top author:       {authors.most_common(1)[0]}")
-    print(f"Favourite genre:  {genres.most_common(1)[0]}")
+
+    # Count by status
+    status_counts = Counter(b.get("status", "Unknown") for b in books)
+
+    # Books added this month / year
+    added_month = sum(1 for b in books if b.get("timestamp", "")[:7] == this_month)
+    added_year  = sum(1 for b in books if b.get("timestamp", "")[:4] == this_year)
+
+    # Average rating (only books with an explicit rating)
+    rated = [b["rating"] for b in completed if b.get("rating", 0) > 0]
+    avg_rating = f"{sum(rated)/len(rated):.1f}/5" if rated else "N/A"
+
+    top_author = authors.most_common(1)[0] if authors else ("N/A", 0)
+    top_genre  = genres.most_common(1)[0]  if genres  else ("N/A", 0)
+
+    print(f"\n📚  Reading Stats")
+    print(f"{'─'*35}")
+    print(f"Total in library:    {len(books)}")
+    for s in ("Want to Read", "Reading", "Completed", "Reread", "DNF"):
+        count = status_counts.get(s, 0)
+        if count:
+            print(f"  {s:<18} {count}")
+    print(f"Added this month:    {added_month}")
+    print(f"Added this year:     {added_year}")
+    print(f"Average rating:      {avg_rating}")
+    print(f"Top author:          {top_author[0]} ({top_author[1]} book{'s' if top_author[1] != 1 else ''})")
+    print(f"Favourite genre:     {top_genre[0]} ({top_genre[1]} book{'s' if top_genre[1] != 1 else ''})")

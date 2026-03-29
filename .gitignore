@@ -17,3 +17,8 @@ Thumbs.db
 .vscode/
 .idea/
 *.swp
+
+#claude
+claude_logs/
+.claude/
+claude_cache/
