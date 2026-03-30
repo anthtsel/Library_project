@@ -1,12 +1,22 @@
 import os
-import json
 import datetime
 import csv
 import random
 import difflib
 from collections import Counter
-from config import BOOK_FILE, DATA_FOLDER, OLLAMA_MODEL
-import shutil
+from config import OLLAMA_MODEL
+from db import load_books, save_books
+
+_STATUS_MAP = {
+    "want to read": "Want to Read",
+    "reading":      "Reading",
+    "completed":    "Completed",
+    "reread":       "Reread",
+    "dnf":          "DNF",
+}
+
+def _normalize_status(s: str) -> str:
+    return _STATUS_MAP.get(s.strip().lower(), s.strip().title())
 
 # Optional terminal color support
 try:
@@ -55,30 +65,6 @@ try:
 except ImportError:
     OLLAMA_AVAILABLE = False
 
-
-def load_books():
-    """Read the JSON file into a Python list."""
-    if not os.path.exists(BOOK_FILE):
-        return []
-    try:
-        with open(BOOK_FILE, "r") as file:
-            return json.load(file)
-    except json.JSONDecodeError:
-        return []
-
-def save_books(book_list):
-    """Save a Python list into the JSON file."""
-    os.makedirs("data/backups", exist_ok=True)
-    if os.path.exists(BOOK_FILE):
-        ts = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
-        backup_path = f"data/backups/books_{ts}.json"
-        try:
-            shutil.copy(BOOK_FILE, backup_path)
-        except Exception as e:
-            print(f"⚠️  Backup failed: {e}")
-    os.makedirs(DATA_FOLDER, exist_ok=True)
-    with open(BOOK_FILE, "w") as file:
-        json.dump(book_list, file, indent=4)
 
 
 # ── AI helpers ────────────────────────────────────────────────────────────────
@@ -202,7 +188,7 @@ def add_book_with_author(title, author, event="manual", genre="n/a", tags_string
     tag_list = [t.strip().lower() for t in tags_string.split(",") if t.strip()]
 
     # Normalize status
-    status = "DNF" if status.lower() == "dnf" else status.title()
+    status = _normalize_status(status)
 
     # Duplicate check
     if any(b["title"].lower() == title.lower() for b in books):
@@ -316,7 +302,7 @@ def update_book_status(title, new_status, rating=None):
     # Exact match first (fast path)
     for b in books:
         if b["title"].lower() == title.lower():
-            b["status"] = "DNF" if new_status == "dnf" else new_status.title()
+            b["status"] = _normalize_status(new_status)
             if rating is not None:
                 b["rating"] = rating
             b["last_updated"] = datetime.datetime.now().isoformat()
@@ -342,7 +328,7 @@ def update_book_status(title, new_status, rating=None):
             if best_ratio > 0.8 or len(candidates) == 1:
                 # Auto-update if confident or only one match
                 b = best_book
-                b["status"] = "DNF" if new_status == "dnf" else new_status.title()
+                b["status"] = _normalize_status(new_status)
                 if rating is not None:
                     b["rating"] = rating
                 b["last_updated"] = datetime.datetime.now().isoformat()
@@ -358,7 +344,7 @@ def update_book_status(title, new_status, rating=None):
                 choice = int(input("Choose one (1-5) or 0 to cancel: ").strip())
                 if 1 <= choice <= len(candidates):
                     b = candidates[choice-1][0]
-                    b["status"] = "DNF" if new_status == "dnf" else new_status.title()
+                    b["status"] = _normalize_status(new_status)
                     if rating is not None:
                         b["rating"] = rating
                     b["last_updated"] = datetime.datetime.now().isoformat()
@@ -478,7 +464,7 @@ def bulk_import(filepath="import.csv"):
     added = 0
     skipped = 0
 
-    with open(filepath, "r") as f:
+    with open(filepath, "r", encoding="utf-8") as f:
         reader = csv.DictReader(f)
         for row in reader:
             title  = row.get("title",  "").strip()

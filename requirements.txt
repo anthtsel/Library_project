@@ -1,2 +1,5 @@
 colorama
 ollama
+fastapi
+uvicorn
+httpx

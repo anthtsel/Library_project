@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <!-- Camera permission — required for the barcode scanner tab -->
+    <key>NSCameraUsageDescription</key>
+    <string>Scan ISBN barcodes to instantly add books to your library.</string>
+
+    <!-- Allow plain HTTP to your local FastAPI server.
+         NSAllowsLocalNetworking covers *.local mDNS names and loopback.
+         Add your server's IP under NSExceptionDomains if accessing by raw IP. -->
+    <key>NSAppTransportSecurity</key>
+    <dict>
+        <key>NSAllowsLocalNetworking</key>
+        <true/>
+        <!--
+        Uncomment and replace with your server's LAN IP for device testing:
+        <key>NSExceptionDomains</key>
+        <dict>
+            <key>192.168.1.42</key>
+            <dict>
+                <key>NSExceptionAllowsInsecureHTTPLoads</key>
+                <true/>
+                <key>NSIncludesSubdomains</key>
+                <false/>
+            </dict>
+        </dict>
+        -->
+    </dict>
+
+    <key>UILaunchScreen</key>
+    <dict/>
+</dict>
+</plist>
