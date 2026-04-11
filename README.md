@@ -8,7 +8,7 @@ A personal book tracking app with a CLI, a web UI, and local AI integration via 
 
 - **CLI app** — add, edit, search, delete, and update book status from the terminal
 - **Web UI** — bookshelf, card, and list views with live search and filtering
-- **AI blurbs** — auto-generated one-sentence descriptions via `gemma3:4b` when adding books
+- **AI blurbs** — auto-generated one-sentence descriptions via `gemma4:4b` when adding books
 - **Conversational library** — chat mode lets you ask questions about your collection via Ollama
 - **CSV bulk import** — import many books at once from a spreadsheet
 - **Export** — download your updated `books.json` from the web UI to keep CLI and browser in sync
@@ -58,7 +58,7 @@ pip install -r requirements.txt
 Install Ollama from [ollama.com](https://ollama.com), then pull the model:
 
 ```bash
-ollama pull gemma3:4b
+ollama pull gemma4:4b
 ollama serve
 ```
 
@@ -158,7 +158,7 @@ Then from the CLI choose option **9** and press Enter to use the default filenam
 |-------|-----------|
 | Language | Python 3.12 |
 | Data storage | JSON (flat file) |
-| AI model | `gemma3:4b` via Ollama |
+| AI model | `gemma4:4b` via Ollama |
 | Web UI | Vanilla HTML/CSS/JS (no framework, no build step) |
 | Environment | Ubuntu / WSL2 |
 

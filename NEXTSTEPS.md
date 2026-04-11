@@ -210,7 +210,7 @@ def chat_with_rag(question):
     # 1. Embed the question
     # 2. Retrieve top-k relevant chunks from ChromaDB
     # 3. Build prompt: context + question
-    # 4. Send to gemma3:4b
+    # 4. Send to gemma4:4b
     # 5. Return grounded answer
     ...
 ```
@@ -231,7 +231,7 @@ def generate_blurb_with_validation(title, author, genre="", max_attempts=3):
 Blurb: "{blurb}"
 Respond with ONLY a number between 1 and 10."""
 
-        response = ollama.chat(model="gemma3:4b", messages=[{"role":"user","content":score_prompt}])
+        response = ollama.chat(model="gemma4:4b", messages=[{"role":"user","content":score_prompt}])
         score = int(response["message"]["content"].strip())
 
         if score >= 7:

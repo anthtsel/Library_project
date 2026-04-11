@@ -10,7 +10,7 @@ source venv/bin/activate
 pip install -r requirements.txt
 
 # Optional — for AI blurbs and chat mode
-ollama pull gemma3:4b
+ollama pull gemma4:4b
 ollama serve
 ```
 
@@ -39,7 +39,7 @@ All logic lives in three files:
 
 **Data layer:** `data/books.json` is the single source of truth — a flat JSON array of book objects. Every `save_books()` call first writes a timestamped backup to `data/backups/`.
 
-**AI integration:** `ollama` and `colorama` are both optional — imported inside `try/except` blocks. If unavailable, AI features are silently skipped and terminal output falls back to plain text. The model is hardcoded as `gemma3:4b`.
+**AI integration:** `ollama` and `colorama` are both optional — imported inside `try/except` blocks. If unavailable, AI features are silently skipped and terminal output falls back to plain text. The model is hardcoded as `gemma4:4b`.
 
 **Search** uses simple substring matching across title, author, genre, tags, and status. `update_book_status()` also has fuzzy matching via `difflib.SequenceMatcher` with a 0.6 similarity cutoff.
 

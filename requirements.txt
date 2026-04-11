@@ -3,3 +3,4 @@ ollama
 fastapi
 uvicorn
 httpx
+pydantic

@@ -129,7 +129,7 @@ NSAppTransportSecurity
 
 **"AI Librarian is offline"**
 - Ollama not running → `ollama serve` on the Mac running the backend
-- Model not pulled → `ollama pull gemma3:4b`
+- Model not pulled → `ollama pull gemma4:4b`
 
 **Charts don't appear (iOS 16)**
 - `import Charts` requires iOS 16+. The app targets iOS 16 minimum. If building for iOS 15, remove the Charts import and replace `StatsView`'s chart section with a plain list.
